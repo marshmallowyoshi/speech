@@ -30,13 +30,12 @@ def convert_bytearray_to_wav_ndarray(input_bytearray: bytes, sampling_rate=16000
     return output
 
 if __name__ == "__main__":
-    with pyaudio.PyAudio() as p, Spinner() as spinner:
+    with pyaudio.PyAudio() as p:
         try:
             # Get default WASAPI info
             wasapi_info = p.get_host_api_info_by_type(pyaudio.paWASAPI)
         except OSError:
-            spinner.print("Looks like WASAPI is not available on the system. Exiting...")
-            spinner.stop()
+            print("Looks like WASAPI is not available on the system. Exiting...")
             exit()
         
         # Get default WASAPI speakers
@@ -48,11 +47,10 @@ if __name__ == "__main__":
                     default_speakers = loopback
                     break
             else:
-                spinner.print("Default loopback output device not found.\n\nRun `python -m pyaudiowpatch` to check available devices.\nExiting...\n")
-                spinner.stop()
+                print("Default loopback output device not found.\n\nRun `python -m pyaudiowpatch` to check available devices.\nExiting...\n")
                 exit()
                 
-        spinner.print(f"Recording from: ({default_speakers['index']}){default_speakers['name']}")
+        print(f"Recording from: ({default_speakers['index']}){default_speakers['name']}")
         
         def callback(in_data, frame_count, time_info, status):
             """Write frames and return PA flag"""
